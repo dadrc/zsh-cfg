@@ -1,1 +1,1 @@
-source /home/drc/.zsh/prompt.zsh
+source "${HOME}/.zsh/prompt.zsh"

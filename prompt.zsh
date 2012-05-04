@@ -1,3 +1,5 @@
+export DONTSETRPROMPT=1
+
 if [ $UID -eq 0 ]; then
 	NCOLOR="red";
 	CCOLOR="red";
@@ -17,3 +19,4 @@ function currentdir {
 }
 
 PROMPT='%{$fg[$NCOLOR]%}%m%{$reset_color%}:%{$fg[green]%}$(currentdir)%{$reset_color%}:%{$fg[$CCOLOR]%}%(!.#.$)%{$reset_color%} '
+RPROMPT='%(?..!) ${vcs_info_msg_0_}'
