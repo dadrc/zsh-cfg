@@ -676,7 +676,7 @@ bindkey "\e[6~" history-beginning-search-forward-end  # PageDown
 # bindkey -s '^b' " &\n"                # ctrl-B runs it in the background
 
 # insert unicode character
-# usage example: 'ctrl-x i' 00A7 'ctrl-x i' will give you an ง
+# usage example: 'ctrl-x i' 00A7 'ctrl-x i' will give you an ยง
 # See for example http://unicode.org/charts/ for unicode characters code
 zrcautoload insert-unicode-char
 zle -N insert-unicode-char
@@ -1344,26 +1344,7 @@ function info_print () {
 #       in zsh-help() below.
 is4 && [[ $NOPRECMD -eq 0 ]] && precmd () {
     [[ $NOPRECMD -gt 0 ]] && return 0
-    # update VCS information
-    (( ${+functions[vcs_info]} )) && vcs_info
 
-    if [[ $TERM == screen* ]] ; then
-        if [[ -n ${vcs_info_msg_1_} ]] ; then
-            ESC_print ${vcs_info_msg_1_}
-        else
-            ESC_print "zsh"
-        fi
-    fi
-    # just use DONTSETRPROMPT=1 to be able to overwrite RPROMPT
-    if [[ ${DONTSETRPROMPT:-} -eq 0 ]] ; then
-        if [[ $BATTERY -gt 0 ]] ; then
-            # update battery (dropped into $PERCENT) information
-            battery
-            RPROMPT="%(?..:() ${PERCENT}"
-        else
-            RPROMPT="%(?..:() "
-        fi
-    fi
     # adjust title of xterm
     # see http://www.faqs.org/docs/Linux-mini/Xterm-Title.html
     [[ ${NOTITLE:-} -gt 0 ]] && return 0
@@ -1410,33 +1391,6 @@ PS4='+%N:%i:%_> '
 # set variable debian_chroot if running in a chroot with /etc/debian_chroot
 if [[ -z "$debian_chroot" ]] && [[ -r /etc/debian_chroot ]] ; then
     debian_chroot=$(cat /etc/debian_chroot)
-fi
-
-# don't use colors on dumb terminals (like emacs):
-if [[ "$TERM" == dumb ]] ; then
-    PROMPT="${EXITCODE}${debian_chroot:+($debian_chroot)}%n@%m %40<...<%B%~%b%<< "
-else
-    # only if $GRMLPROMPT is set (e.g. via 'GRMLPROMPT=1 zsh') use the extended
-    # prompt set variable identifying the chroot you work in (used in the
-    # prompt below)
-    if [[ $GRMLPROMPT -gt 0 ]] ; then
-        PROMPT="${RED}${EXITCODE}${CYAN}[%j running job(s)] ${GREEN}{history#%!} ${RED}%(3L.+.) ${BLUE}%* %D
-${BLUE}%n${NO_COLOUR}@%m %40<...<%B%~%b%<< "
-    else
-        # This assembles the primary prompt string
-        if (( EUID != 0 )); then
-            PROMPT="${RED}${EXITCODE}${WHITE}${debian_chroot:+($debian_chroot)}${BLUE}%n${NO_COLOUR}@%m %40<...<%B%~%b%<< "
-        else
-            PROMPT="${BLUE}${EXITCODE}${WHITE}${debian_chroot:+($debian_chroot)}${RED}%n${NO_COLOUR}@%m %40<...<%B%~%b%<< "
-        fi
-    fi
-fi
-
-PROMPT="${PROMPT}"'${vcs_info_msg_0_}'"%# "
-
-# if we are inside a grml-chroot set a specific prompt theme
-if [[ -n "$GRML_CHROOT" ]] ; then
-    PROMPT="%{$fg[red]%}(CHROOT) %{$fg_bold[red]%}%n%{$fg_no_bold[white]%}@%m %40<...<%B%~%b%<< %\# "
 fi
 
 # 'hash' some often used directories
