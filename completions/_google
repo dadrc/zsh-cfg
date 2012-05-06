@@ -1,0 +1,6 @@
+#compdef google
+
+_arguments "1:service:(picasa blogger youtube docs contacts calendar finance)"
+#\
+#	"2:task:((picasa\:get create list list-albums calendar:\ today))"
+
