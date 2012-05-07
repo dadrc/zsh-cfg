@@ -9,7 +9,7 @@ local FMT_BRANCH FMT_ACTION FMT_PATH
 # %a - action (e.g. rebase-i)
 # %R - repository path
 # %S - path in the repository
-FMT_BRANCH="%f%%b%F{green}%b%F{red}%u%c%f" # e.g. master¹²
+FMT_BRANCH="%f%%b%F{blue}%b%F{red}%u%c%f" # e.g. master¹²
 FMT_ACTION="(%F{cyan}%a%f"   # e.g. (rebase-i)
 FMT_PATH="%F{green}%R/%%F{yellow}%S"              # e.g. ~/repo/subdir
 
