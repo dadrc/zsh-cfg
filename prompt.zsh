@@ -10,7 +10,7 @@ if [ $UID -eq 0 ]; then
 	CCOLOR="red";
 else
 	NCOLOR="reset_color";
-	CCOLOR="green";
+	CCOLOR="blue";
 fi
 
 add-zsh-hook precmd drc_precmd
@@ -31,7 +31,7 @@ function currentdir {
 }
 
 function setprompt {
-	PROMPT='%{$fg[$NCOLOR]%}%m%{$reset_color%}:%{$fg[green]%}$curdir%{$reset_color%}:%{$fg[$CCOLOR]%}%(!.#.$)%{$reset_color%} '
+	PROMPT='%{$fg[$NCOLOR]%}%m%{$reset_color%}:%{$fg[blue]%}$curdir%{$reset_color%}:%{$fg[$CCOLOR]%}%(!.#.$)%{$reset_color%} '
 	RPROMPT='%(?..!) $gitinfo'
 }
 
