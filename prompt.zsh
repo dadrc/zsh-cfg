@@ -6,12 +6,14 @@ setopt prompt_subst
 
 # color setup
 if [ $UID -eq 0 ]; then
-	NCOLOR="red";
-	CCOLOR="red";
+	host_color=$(fgColor 1);
+	prompt_color=$(fgColor 1);
 else
-	NCOLOR="reset_color";
-	CCOLOR="blue";
+	host_color="";
+	prompt_color=$(fgColor 33);
 fi
+
+path_color=$(fgColor 33)
 
 add-zsh-hook precmd drc_precmd
 function drc_precmd {
@@ -31,7 +33,7 @@ function currentdir {
 }
 
 function setprompt {
-	PROMPT='%{$fg[$NCOLOR]%}%m%{$reset_color%}:%{$fg[blue]%}$curdir%{$reset_color%}:%{$fg[$CCOLOR]%}%(!.#.$)%{$reset_color%} '
+	PROMPT='%{$host_color%}%m%{$reset_color%}:%{$path_color%}$curdir%{$reset_color%}:%{$prompt_color%}%(!.#.$)%{$reset_color%} '
 	RPROMPT='%(?..!) $gitinfo'
 }
 

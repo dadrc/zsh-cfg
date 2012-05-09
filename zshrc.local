@@ -1,3 +1,4 @@
+source "${HOME}/.zsh/colors.zsh"
 source "${HOME}/.zsh/vcsinfo.zsh"
 source "${HOME}/.zsh/prompt.zsh"
 source "${HOME}/.zsh/plugins/syntax/zsh-syntax-highlighting.zsh"

@@ -1,2 +1,3 @@
+#TERM=xterm-256color
 fpath=(${HOME}/.zsh/completions $fpath) 
 
