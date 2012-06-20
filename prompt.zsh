@@ -34,7 +34,7 @@ function currentdir {
 
 function setprompt {
 	PROMPT='%{$host_color%}%m%{$reset_color%}:%{$path_color%}$curdir%{$reset_color%}:%{$prompt_color%}%(!.#.$)%{$reset_color%} '
-	RPROMPT='%(?..!) $gitinfo'
+	RPROMPT='%(?..%{$(fgColor 1)%}!%{$reset_color%}) $gitinfo'
 }
 
 setprompt
