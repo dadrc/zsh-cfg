@@ -1,5 +1,13 @@
+# zsh profiling
+# just execute 'ZSH_PROFILE_RC=1 zsh' and run 'zprof' to get the details
+if [[ $ZSH_PROFILE_RC -gt 0 ]] ; then
+    zmodload zsh/zprof
+fi
+
 # load .zshrc.pre to give the user the chance to overwrite the defaults
 [[ -r ${HOME}/.zshrc.pre ]] && source ${HOME}/.zshrc.pre
+
+
 
 #f1# are we running within an utf environment?
 isutfenv() {
@@ -113,7 +121,7 @@ NOCOR=${NOCOR:-0}
 NOMENU=${NOMENU:-0}
 NOPRECMD=${NOPRECMD:-0}
 COMMAND_NOT_FOUND=${COMMAND_NOT_FOUND:-0}
-BATTERY=${BATTERY:-0}
+GRML_ZSH_CNF_HANDLER=${GRML_ZSH_CNF_HANDLER:-/usr/lib/command-not-found}
 ZSH_NO_DEFAULT_LOCALE=${ZSH_NO_DEFAULT_LOCALE:-0}
 
 typeset -ga ls_options
@@ -464,7 +472,6 @@ bindkey '\e^?' slash-backward-kill-word
 # use the new *-pattern-* widgets for incremental history search
 bindkey '^r' history-incremental-pattern-search-backward
 bindkey '^s' history-incremental-pattern-search-forward
-
 
 # a generic accept-line wrapper
 
@@ -852,7 +859,7 @@ fi
 chpwd() {
     local -ax my_stack
     my_stack=( ${PWD} ${dirstack} )
-    print my_stack >! ${DIRSTACKFILE}
+    builtin print -l ${(u)my_stack} >! ${DIRSTACKFILE}
 }
 
 # directory based profiles
@@ -937,43 +944,25 @@ function chpwd_profiles() {
 }
 chpwd_functions=( ${chpwd_functions} chpwd_profiles )
 
-
-
-# gather version control information for inclusion in a prompt
-
-if zrcautoload vcs_info; then
-    # `vcs_info' in zsh versions 4.3.10 and below have a broken `_realpath'
-    # function, which can cause a lot of trouble with our directory-based
-    # profiles. So:
-    if [[ ${ZSH_VERSION} == 4.3.<-10> ]] ; then
-        function VCS_INFO_realpath () {
-            setopt localoptions NO_shwordsplit chaselinks
-            ( builtin cd -q $1 2> /dev/null && pwd; )
-        }
-    fi
-
-    zstyle ':vcs_info:*' max-exports 2
-
-    if [[ -o restricted ]]; then
-        zstyle ':vcs_info:*' enable NONE
-    fi
-fi
-
-# Change vcs_info formats for the grml prompt. The 2nd format sets up
-# $vcs_info_msg_1_ to contain "zsh: repo-name" used to set our screen title.
-# TODO: The included vcs_info() version still uses $VCS_INFO_message_N_.
-#       That needs to be the use of $VCS_INFO_message_N_ needs to be changed
-#       to $vcs_info_msg_N_ as soon as we use the included version.
-if [[ "$TERM" == dumb ]] ; then
-    zstyle ':vcs_info:*' actionformats "(%s%)-[%b|%a] " "zsh: %r"
-    zstyle ':vcs_info:*' formats       "(%s%)-[%b] "    "zsh: %r"
+# set colors for use in prompts
+if zrcautoload colors && colors 2>/dev/null ; then
+    BLUE="%{${fg[blue]}%}"
+    RED="%{${fg_bold[red]}%}"
+    GREEN="%{${fg[green]}%}"
+    CYAN="%{${fg[cyan]}%}"
+    MAGENTA="%{${fg[magenta]}%}"
+    YELLOW="%{${fg[yellow]}%}"
+    WHITE="%{${fg[white]}%}"
+    NO_COLOUR="%{${reset_color}%}"
 else
-    # these are the same, just with a lot of colours:
-    zstyle ':vcs_info:*' actionformats "${MAGENTA}(${NO_COLOUR}%s${MAGENTA})${YELLOW}-${MAGENTA}[${GREEN}%b${YELLOW}|${RED}%a${MAGENTA}]${NO_COLOUR} " \
-                                       "zsh: %r"
-    zstyle ':vcs_info:*' formats       "${MAGENTA}(${NO_COLOUR}%s${MAGENTA})${YELLOW}-${MAGENTA}[${GREEN}%b${MAGENTA}]${NO_COLOUR}%} " \
-                                       "zsh: %r"
-    zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat "%b${RED}:${YELLOW}%r"
+    BLUE=$'%{\e[1;34m%}'
+    RED=$'%{\e[1;31m%}'
+    GREEN=$'%{\e[1;32m%}'
+    CYAN=$'%{\e[1;36m%}'
+    WHITE=$'%{\e[1;37m%}'
+    MAGENTA=$'%{\e[1;35m%}'
+    YELLOW=$'%{\e[1;33m%}'
+    NO_COLOUR=$'%{\e[0m%}'
 fi
 
 # command not found handling
@@ -1209,7 +1198,6 @@ the zsh yet. :)
   "NOPRECMD=1 zsh" => disable the precmd + preexec commands (set GNU screen title)
   "NOTITLE=1  zsh" => disable setting the title of xterms without disabling
                       preexec() and precmd() completely
-  "BATTERY=1  zsh" => activate battery status (via acpi) on right side of prompt
   "COMMAND_NOT_FOUND=1 zsh"
                    => Enable a handler if an external command was not found
                       The command called in the handler can be altered by setting
@@ -1286,7 +1274,7 @@ limit -s
 
 # completion system
 
-# called later (via grmlcomp)
+# called later (via is4 && grmlcomp)
 # note: use 'zstyle' for getting current settings
 #         press ^xh (control-x h) for getting tags in context; ^x? (control-x ?) to run complete_debug with trace output
 grmlcomp() {
@@ -1414,15 +1402,18 @@ grmlcomp() {
                             zstyle ':completion::complete:*' cache-path $ZSHDIR/cache/
 
     # host completion
-		[[ -r ~/.ssh/known_hosts ]] && _ssh_hosts=(${${${${(f)"$(<$HOME/.ssh/known_hosts)"}:#[\|]*}%%\ *}%%,*}) || _ssh_hosts=()
+    [[ -r ~/.ssh/known_hosts ]] && _ssh_hosts=(${${${${(f)"$(<$HOME/.ssh/known_hosts)"}:#[\|]*}%%\ *}%%,*}) || _ssh_hosts=()
     [[ -r /etc/hosts ]] && : ${(A)_etc_hosts:=${(s: :)${(ps:\t:)${${(f)~~"$(</etc/hosts)"}%%\#*}##[:blank:]#[^[:blank:]]#}}} || _etc_hosts=()
     hosts=(
         $(hostname)
         "$_ssh_hosts[@]"
         "$_etc_hosts[@]"
+        grml.org
         localhost
     )
     zstyle ':completion:*:hosts' hosts $hosts
+    # TODO: so, why is this here?
+    #  zstyle '*' hosts $hosts
 
     # use generic completion system for programs not yet defined; (_gnu_generic works
     # with commands that provide a --help option with "standard" gnu-like output.)
@@ -1434,6 +1425,36 @@ grmlcomp() {
     # see upgrade function in this file
     compdef _hosts upgrade
 }
+
+# grmlstuff
+grmlstuff() {
+# people should use 'grml-x'!
+    if check_com -c 915resolution; then
+        855resolution() {
+            echo "Please use 915resolution as resolution modifying tool for Intel \
+graphic chipset."
+            return -1
+        }
+    fi
+
+    #a1# Output version of running grml
+    alias grml-version='cat /etc/grml_version'
+
+    if check_com -c rebuildfstab ; then
+        #a1# Rebuild /etc/fstab
+        alias grml-rebuildfstab='rebuildfstab -v -r -config'
+    fi
+
+    if check_com -c grml-debootstrap ; then
+        debian2hd() {
+            echo "Installing debian to harddisk is possible by using grml-debootstrap."
+            return 1
+        }
+    fi
+}
+
+# now run the functions
+grmlcomp
 
 # wonderful idea of using "e" glob qualifier by Peter Stephenson
 # You use it as follows:
@@ -1480,7 +1501,11 @@ if check_com -c $PAGER ; then
         else
             if check_com -c aptitude ; then
                 echo "No changelog for package $1 found, using aptitude to retrieve it."
-                aptitude changelog $1
+                if isgrml ; then
+                    aptitude -t unstable changelog $1
+                else
+                    aptitude changelog $1
+                fi
             else
                 echo "No changelog for package $1 found, sorry."
                 return 1
@@ -1520,6 +1545,11 @@ if check_com -c $PAGER ; then
     _uchange() { _files -W /usr/share/doc -/ }
     compdef _uchange uchange
 fi
+
+# zsh profiling
+profile() {
+    ZSH_PROFILE_RC=1 $SHELL "$@"
+}
 
 #f1# Edit an alias via zle
 edalias() {
@@ -1678,8 +1708,6 @@ help_zle_parse_keybindings()
 }
 typeset -g help_zle_sln
 typeset -g -a help_zle_lines
-
-grmlcomp
 
 #f1# Provides (partially autogenerated) help on keybindings and the zsh line editor
 help-zle()
@@ -2282,6 +2310,7 @@ if check_com -c hg ; then
     }
 
 fi # end of check whether we have the 'hg'-executable
+
 
 zrclocal
 
