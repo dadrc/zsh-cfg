@@ -118,15 +118,8 @@ ZSH_NO_DEFAULT_LOCALE=${ZSH_NO_DEFAULT_LOCALE:-0}
 
 typeset -ga ls_options
 typeset -ga grep_options
-if ls --help 2> /dev/null | grep -q GNU; then
-    ls_options=( --color=auto )
-elif [[ $OSTYPE == freebsd* ]]; then
-    ls_options=( -G )
-fi
-if grep --help 2> /dev/null | grep -q GNU || \
-   [[ $OSTYPE == freebsd* ]]; then
-    grep_options=( --color=auto )
-fi
+ls_options=( --color=auto )
+grep_options=( --color=auto )
 
 # utility functions
 # this function checks if a command exists and returns either true
