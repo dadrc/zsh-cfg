@@ -2311,6 +2311,12 @@ if check_com -c hg ; then
 
 fi # end of check whether we have the 'hg'-executable
 
+source "${HOME}/.zsh/colors.zsh"
+source "${HOME}/.zsh/vcsinfo.zsh"
+source "${HOME}/.zsh/prompt.zsh"
+source "${HOME}/.zsh/plugins/syntax/zsh-syntax-highlighting.zsh"
+source "${HOME}/.zsh/aliases.zsh"
+source "${HOME}/.zsh/apt-hook.zsh"
 
 zrclocal
 

@@ -1,8 +1,2 @@
-source "${HOME}/.zsh/colors.zsh"
-source "${HOME}/.zsh/vcsinfo.zsh"
-source "${HOME}/.zsh/prompt.zsh"
-source "${HOME}/.zsh/plugins/syntax/zsh-syntax-highlighting.zsh"
-source "${HOME}/.zsh/aliases.zsh"
-source "${HOME}/.zsh/apt-hook.zsh"
 export WORKON_HOME=$HOME/.virtualenvs
 source /etc/bash_completion.d/virtualenvwrapper 
