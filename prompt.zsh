@@ -15,8 +15,8 @@ fi
 
 path_color=$(fgColor 33)
 
-add-zsh-hook precmd drc_precmd
-function drc_precmd {
+add-zsh-hook precmd prompt-precmd
+function prompt-precmd {
 	curdir=$(currentdir)
 	vcs_info 'prompt'
 	gitinfo="${${vcs_info_msg_0_%%.}/$HOME/~}"
