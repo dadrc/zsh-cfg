@@ -1,3 +1,8 @@
+#TODO remove zrcautoload
+#TODO remove x* functions
+#TODO sort keybindings -- extra file for that?
+#
+
 # zsh profiling
 # just execute 'ZSH_PROFILE_RC=1 zsh' and run 'zprof' to get the details
 if [[ $ZSH_PROFILE_RC -gt 0 ]] ; then
