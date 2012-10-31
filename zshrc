@@ -1,3 +1,8 @@
+#TODO remove zrcautoload
+#TODO remove x* functions
+#TODO sort keybindings -- extra file for that?
+#
+
 # zsh profiling
 # just execute 'ZSH_PROFILE_RC=1 zsh' and run 'zprof' to get the details
 if [[ $ZSH_PROFILE_RC -gt 0 ]] ; then
@@ -385,8 +390,8 @@ bindkey '\e[7~' beginning-of-somewhere  # home
 bindkey '\e[8~' end-of-somewhere        # end
 #fi
 
-bindkey '\e[A'  up-line-or-search       # cursor up
-bindkey '\e[B'  down-line-or-search     # <ESC>-
+bindkey "$terminfo[kcuu1]"  up-line-or-search       # cursor up
+bindkey "$terminfo[kcud1]"  down-line-or-search     # cursor down
 
 ## use Ctrl-left-arrow and Ctrl-right-arrow for jumping to word-beginnings on the CL
 bindkey "\e[5C" forward-word
@@ -680,12 +685,12 @@ zrcautoload zmv    # who needs mmv or rename?
 zrcautoload history-search-end
 
 # we don't want to quote/espace URLs on our own...
-# if autoload -U url-quote-magic ; then
-#    zle -N self-insert url-quote-magic
-#    zstyle ':url-quote-magic:*' url-metas '*?[]^()~#{}='
-# else
-#    print 'Notice: no url-quote-magic available :('
-# fi
+ if autoload -U url-quote-magic ; then
+    zle -N self-insert url-quote-magic
+    zstyle ':url-quote-magic:*' url-metas '*?[]^()~#{}='
+ else
+    print 'Notice: no url-quote-magic available :('
+ fi
 alias url-quote='autoload -U url-quote-magic ; zle -N self-insert url-quote-magic'
 
 #m# k ESC-h Call \kbd{run-help} for the 1st word on the command line
@@ -2311,6 +2316,12 @@ if check_com -c hg ; then
 
 fi # end of check whether we have the 'hg'-executable
 
+source "${HOME}/.zsh/colors.zsh"
+source "${HOME}/.zsh/vcsinfo.zsh"
+source "${HOME}/.zsh/prompt.zsh"
+source "${HOME}/.zsh/plugins/syntax/zsh-syntax-highlighting.zsh"
+source "${HOME}/.zsh/aliases.zsh"
+source "${HOME}/.zsh/apt-hook.zsh"
 
 zrclocal
 
