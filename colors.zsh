@@ -1,5 +1,5 @@
 function fgColor() {
-	if [ $1 ]; then
+	if [[ -n $1 ]]; then
 		if [[ $1 == <0-255> ]]; then
 			echo "\x1b[38;5;${1}m"
 		fi
@@ -8,7 +8,7 @@ function fgColor() {
 
 
 function bgColor() {
-	if [ $1 ]; then
+	if [[ -n $1 ]]; then
 		if [[ $1 == <0-255> ]]; then
 			echo "\x1b[48;5;${1}m"
 		fi
