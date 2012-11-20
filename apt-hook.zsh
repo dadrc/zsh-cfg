@@ -1,5 +1,7 @@
 # vim: set syntax=zsh:
 
+# automatically rehashes all running zsh instances after installing new packages
+
 autoload -U add-zsh-hook
 
 TRAPUSR1() { rehash };
