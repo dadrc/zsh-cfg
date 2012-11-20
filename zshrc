@@ -390,8 +390,6 @@ bindkey '\e[7~' beginning-of-somewhere  # home
 bindkey '\e[8~' end-of-somewhere        # end
 #fi
 
-bindkey "$terminfo[kcuu1]"  up-line-or-search       # cursor up
-bindkey "$terminfo[kcud1]"  down-line-or-search     # cursor down
 
 ## use Ctrl-left-arrow and Ctrl-right-arrow for jumping to word-beginnings on the CL
 bindkey "\e[5C" forward-word
@@ -414,6 +412,11 @@ bindkey '^xP'   history-beginning-search-forward-end
 bindkey "\e[5~" history-beginning-search-backward-end # PageUp
 #k# search history forward for entry beginning with typed text
 bindkey "\e[6~" history-beginning-search-forward-end  # PageDown
+
+#bindkey "$terminfo[kcuu1]"  up-line-or-search       # cursor up
+bindkey "$terminfo[kcuu1]"  history-beginning-search-backward-end       # cursor up
+#bindkey "$terminfo[kcud1]"  down-line-or-search     # cursor down
+bindkey "$terminfo[kcud1]"  history-beginning-search-forward-end # cursor down
 
 # bindkey -s '^l' "|less\n"             # ctrl-L pipes to less
 # bindkey -s '^b' " &\n"                # ctrl-B runs it in the background
