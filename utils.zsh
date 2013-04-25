@@ -5,3 +5,4 @@ function allcolors() {
 	echo "$output"
 }
 
+function dudir() { du -scm *(ND) | sort -n }

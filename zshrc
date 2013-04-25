@@ -88,7 +88,7 @@ setopt extended_glob
 setopt longlistjobs
 
 # try to avoid the 'zsh: no matches found...'
-setopt nonomatch
+#setopt nonomatch
 
 # report the status of backgrounds jobs immediately
 setopt notify
@@ -2325,6 +2325,7 @@ source "${HOME}/.zsh/prompt.zsh"
 source "${HOME}/.zsh/plugins/syntax/zsh-syntax-highlighting.zsh"
 source "${HOME}/.zsh/aliases.zsh"
 source "${HOME}/.zsh/apt-hook.zsh"
+source "${HOME}/.zsh/utils.zsh"
 
 zrclocal
 
