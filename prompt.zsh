@@ -6,14 +6,15 @@ setopt prompt_subst
 
 # color setup
 if [ $UID -eq 0 ]; then
-	host_color=$(fgColor 1);
+#	host_color=$(fgColor 1);
 	prompt_color=$(fgColor 1);
 else
-	host_color="";
+#	host_color="";
 	prompt_color=$(fgColor 33);
 fi
 
 path_color=$(fgColor 33)
+host_color=$(fgColor $ZSH_HOST_COLOR)
 
 add-zsh-hook precmd prompt-precmd
 function prompt-precmd {
