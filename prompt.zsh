@@ -14,7 +14,13 @@ else
 fi
 
 path_color=$(fgColor 33)
-host_color=$(fgColor $ZSH_HOST_COLOR)
+
+function hash-to-code {
+	local hosthash=$(echo $HOST|md5sum)
+	echo $[$[0x${(r:15:::)hosthash}] % 209 + 22]
+}
+
+host_color=$(fgColor $(hash-to-code))
 
 add-zsh-hook precmd prompt-precmd
 function prompt-precmd {
