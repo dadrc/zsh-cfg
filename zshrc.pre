@@ -1,5 +1,4 @@
 #TERM=xterm-256color
 fpath=(${HOME}/.zsh/completions $fpath) 
-ZSH_HOST_COLOR=$(hosthash)
 WORKON_HOME='~/.virtualenvs'
 
