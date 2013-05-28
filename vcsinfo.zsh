@@ -1,8 +1,8 @@
 autoload -Uz vcs_info
 
 local FMT_BRANCH FMT_ACTION FMT_PATH
-local branch_color=$(fgColor 33)
-local stage_color=$(fgColor 1)
+local branch_color=$(fg-color 33)
+local stage_color=$(fg-color 1)
 # set formats
 # %b - branchname
 # %u - unstagedstr (see below)

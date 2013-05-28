@@ -6,21 +6,21 @@ setopt prompt_subst
 
 # color setup
 if [ $UID -eq 0 ]; then
-#	host_color=$(fgColor 1);
-	prompt_color=$(fgColor 1);
+#	host_color=$(fg-color 1);
+	prompt_color=$(fg-color 1);
 else
 #	host_color="";
-	prompt_color=$(fgColor 33);
+	prompt_color=$(fg-color 33);
 fi
 
-path_color=$(fgColor 33)
+path_color=$(fg-color 33)
 
 function hash-to-code {
-	local hosthash=$(echo $HOST|md5sum)
-	echo $[$[0x${(r:15:::)hosthash}] % 209 + 22]
+	local hosthash=$[0x$(echo "$HOST"|md5sum|cut -c 18-32)]
+	echo $[$hosthash % 209 + 22]
 }
 
-host_color=$(fgColor $(hash-to-code))
+host_color=$(fg-color $(hash-to-code))
 
 add-zsh-hook precmd prompt-precmd
 function prompt-precmd {
@@ -41,7 +41,7 @@ function currentdir {
 
 function setprompt {
 	PROMPT='%{$host_color%}%m%{$reset_color%}:%{$path_color%}$curdir%{$reset_color%}:%{$prompt_color%}%(!.#.$)%{$reset_color%} '
-	RPROMPT='%(?..%{$(fgColor 1)%}!%{$reset_color%}) $gitinfo'
+	RPROMPT='%(?..%{$(fg-color 1)%}!%{$reset_color%}) $gitinfo'
 }
 
 setprompt
