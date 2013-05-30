@@ -985,12 +985,6 @@ function command_not_found_handler() {
 }
 
 # set prompt
-if zrcautoload promptinit && promptinit 2>/dev/null ; then
-    promptinit # people should be able to use their favourite prompt
-else
-    print 'Notice: no promptinit available :('
-fi
-
 setopt prompt_subst
 
 # make sure to use right prompt only when not running a command
@@ -1157,72 +1151,6 @@ if ! check_com asc &>/dev/null ; then
   compdef asc=ssh
 fi
 
-#f1# Hints for the use of zsh on grml
-zsh-help() {
-    print "$bg[white]$fg[black]
-zsh-help - hints for use of zsh on grml
-=======================================$reset_color"
-
-    print '
-Main configuration of zsh happens in /etc/zsh/zshrc.
-That file is part of the package grml-etc-core, if you want to
-use them on a non-grml-system just get the tar.gz from
-http://deb.grml.org/ or (preferably) get it from the git repository:
-
-  http://git.grml.org/f/grml-etc-core/etc/zsh/zshrc
-
-This version of grml'\''s zsh setup does not use skel/.zshrc anymore.
-The file is still there, but it is empty for backwards compatibility.
-
-For your own changes use these two files:
-    $HOME/.zshrc.pre
-    $HOME/.zshrc.local
-
-The former is sourced very early in our zshrc, the latter is sourced
-very lately.
-
-System wide configuration without touching configuration files of grml
-can take place in /etc/zsh/zshrc.local.
-
-For information regarding zsh start at http://grml.org/zsh/
-
-Take a look at grml'\''s zsh refcard:
-% xpdf =(zcat /usr/share/doc/grml-docs/zsh/grml-zsh-refcard.pdf.gz)
-
-Check out the main zsh refcard:
-% '$BROWSER' http://www.bash2zsh.com/zsh_refcard/refcard.pdf
-
-And of course visit the zsh-lovers:
-% man zsh-lovers
-
-You can adjust some options through environment variables when
-invoking zsh without having to edit configuration files.
-Basically meant for bash users who are not used to the power of
-the zsh yet. :)
-
-  "NOCOR=1    zsh" => deactivate automatic correction
-  "NOMENU=1   zsh" => do not use auto menu completion
-                      (note: use ctrl-d for completion instead!)
-  "NOPRECMD=1 zsh" => disable the precmd + preexec commands (set GNU screen title)
-  "NOTITLE=1  zsh" => disable setting the title of xterms without disabling
-                      preexec() and precmd() completely
-  "COMMAND_NOT_FOUND=1 zsh"
-                   => Enable a handler if an external command was not found
-                      The command called in the handler can be altered by setting
-                      the GRML_ZSH_CNF_HANDLER variable, the default is:
-                      "/usr/share/command-not-found/command-not-found"
-
-A value greater than 0 is enables a feature; a value equal to zero
-disables it. If you like one or the other of these settings, you can
-add them to ~/.zshrc.pre to ensure they are set when sourcing grml'\''s
-zshrc.'
-
-    print "
-$bg[white]$fg[black]
-Please report wishes + bugs to the grml-team: http://grml.org/bugs/
-Enjoy your grml system with the zsh!$reset_color"
-}
-
 # debian stuff
 if [[ -r /etc/debian_version ]] ; then
     #a3# Execute \kbd{apt-cache search}
@@ -1258,21 +1186,6 @@ fi
 if check_com -c dpkg-query ; then
     #a3# List installed Debian-packages sorted by size
     alias debs-by-size="dpkg-query -Wf 'x \${Installed-Size} \${Package} \${Status}\n' | sed -ne '/^x  /d' -e '/^x \(.*\) install ok installed$/s//\1/p' | sort -nr"
-fi
-
-# if cdrecord is a symlink (to wodim) or isn't present at all warn:
-if [[ -L /usr/bin/cdrecord ]] || ! check_com -c cdrecord; then
-    if check_com -c wodim; then
-        cdrecord() {
-            cat <<EOMESS
-cdrecord is not provided under its original name by Debian anymore.
-See #377109 in the BTS of Debian for more details.
-
-Please use the wodim binary instead
-EOMESS
-            return 1
-        }
-    fi
 fi
 
 # Use hard limits, except for a smaller stack and no core dumps
@@ -1432,33 +1345,6 @@ grmlcomp() {
 
     # see upgrade function in this file
     compdef _hosts upgrade
-}
-
-# grmlstuff
-grmlstuff() {
-# people should use 'grml-x'!
-    if check_com -c 915resolution; then
-        855resolution() {
-            echo "Please use 915resolution as resolution modifying tool for Intel \
-graphic chipset."
-            return -1
-        }
-    fi
-
-    #a1# Output version of running grml
-    alias grml-version='cat /etc/grml_version'
-
-    if check_com -c rebuildfstab ; then
-        #a1# Rebuild /etc/fstab
-        alias grml-rebuildfstab='rebuildfstab -v -r -config'
-    fi
-
-    if check_com -c grml-debootstrap ; then
-        debian2hd() {
-            echo "Installing debian to harddisk is possible by using grml-debootstrap."
-            return 1
-        }
-    fi
 }
 
 # now run the functions
