@@ -1,0 +1,29 @@
+#compdef gksu gksudo
+
+local curcontext="$curcontext" environ e
+local -a args
+
+zstyle -a ":completion:${curcontext}:" environ environ
+
+for e in "${environ[@]}"
+do local -x "$e"
+done
+
+args=(
+       '-d[Debug mode]'
+       '-g[Disable locking of keyboard]'
+       '-l[Make this a login shell]'
+       '-p[Ask the user if they want to have their keyboard grabbed]'
+       '-h[Show help]'
+       '-k[Preserve the current environments]'
+       '-D[Provide a descriptive name for the program]:program name:'
+       '-m[Replace the standard message asking for a password]:password prompt:'
+       '-u[user name]:user name:_users'
+       '-p[Print the password to stdout]'
+       '-w[Use su(1) as backend]'
+       '-s[Use sudo(1) as backend]'
+)
+
+_arguments $args \
+	'(-):command: _command_names -e' \
+	'*::arguments: _normal'
