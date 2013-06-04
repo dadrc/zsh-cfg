@@ -16,7 +16,7 @@ fi
 path_color=$(fg-color 33)
 
 function hash-to-code {
-	local hosthash=$[0x$(echo "$HOST"|md5sum|cut -c 18-32)]
+	local hosthash=$[0x$(echo "$HOST"|sha1sum|cut -c 26-40)]
 	echo $[$hosthash % 209 + 22]
 }
 
