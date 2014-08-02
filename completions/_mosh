@@ -1,0 +1,76 @@
+#compdef mosh
+# ------------------------------------------------------------------------------
+# Description
+# -----------
+#
+#  Completion script for mosh (http://mosh.mit.edu).
+#
+#  Source: https://gist.github.com/2242920
+#
+# ------------------------------------------------------------------------------
+# Authors
+# -------
+#
+#  * Ben O'Hara (https://github.com/benohara)
+#
+# ------------------------------------------------------------------------------
+
+_mosh () {
+  local curcontext="$curcontext" state line expl common tmp cmds suf ret=1
+  typeset -A opt_args
+  _arguments \
+    '--client=:client helper:_command_names -e' \
+    '--server=:server helper:_files' \
+    '--ssh=:ssh command to run:_files' \
+    '(-a -n)--predict=:when:(adaptive always never)' \
+    '(--predict -n)-a[predict always]' \
+    '(--predict -a)-n[predict never]' \
+    {-p,--port=}':port:_ports' \
+    ':remote host name:_ssh_hosts' \
+    ':remote command:_command_names -e'
+}
+
+_ssh_hosts () {
+  local -a config_hosts
+  local config
+  integer ind
+
+  # If users-hosts matches, we shouldn't complete anything else.
+  if [[ "$IPREFIX" == *@ ]]; then
+    _combination -s '[:@]' my-accounts users-hosts "users=${IPREFIX/@}" hosts "$@" && return
+  else
+    _combination -s '[:@]' my-accounts users-hosts \
+      ${opt_args[-l]:+"users=${opt_args[-l]:q}"} hosts "$@" && return
+  fi
+  if (( ind = ${words[(I)-F]} )); then
+    config=${~words[ind+1]}
+  else
+    config="$HOME/.ssh/config"
+  fi
+  if [[ -r $config ]]; then
+    local IFS=$'\t ' key hosts host
+    while read key hosts; do
+      if [[ "$key" == (#i)host ]]; then
+         for host in ${(z)hosts}; do
+            case $host in
+            (*[*?]*) ;;
+            (*) config_hosts+=("$host") ;;
+            esac
+         done
+      fi
+    done < "$config"
+    if (( ${#config_hosts} )); then
+      _wanted hosts expl 'remote host name' \
+        compadd -M 'm:{a-zA-Z}={A-Za-z} r:|.=* r:|=*' "$@" $config_hosts
+    fi
+  fi
+}
+_mosh "$@"
+
+# Local Variables:
+# mode: Shell-Script
+# sh-indentation: 2
+# indent-tabs-mode: nil
+# sh-basic-offset: 2
+# End:
+# vim: ft=zsh sw=2 ts=2 et
