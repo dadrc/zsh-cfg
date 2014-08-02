@@ -2205,6 +2205,8 @@ if check_com -c hg ; then
 
 fi # end of check whether we have the 'hg'-executable
 
+export TERM='xterm-256color'
+
 source "${HOME}/.zsh/colors.zsh"
 source "${HOME}/.zsh/vcsinfo.zsh"
 source "${HOME}/.zsh/prompt.zsh"
