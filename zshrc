@@ -431,6 +431,77 @@ alias lh='ls -hAl '${ls_options:+"${ls_options[*]} "}
 alias l='ls -lF '${ls_options:+"${ls_options[*]} "}
 
 alias ...='cd ../../'
+
+# generate alias named "$KERNELVERSION-reboot" so you can use boot with kexec:
+if [[ -x /sbin/kexec ]] && [[ -r /proc/cmdline ]] ; then
+    alias "$(uname -r)-reboot"="kexec -l --initrd=/boot/initrd.img-"$(uname -r)" --command-line=\"$(cat /proc/cmdline)\" /boot/vmlinuz-"$(uname -r)""
+fi
+
+# see http://www.cl.cam.ac.uk/~mgk25/unicode.html#term for details
+alias term2iso="echo 'Setting terminal to iso mode' ; print -n '\e%@'"
+alias term2utf="echo 'Setting terminal to utf-8 mode'; print -n '\e%G'"
+
+# make sure it is not assigned yet
+[[ -n ${aliases[utf2iso]} ]] && unalias utf2iso
+utf2iso() {
+    if isutfenv ; then
+        for ENV in $(env | command grep -i '.utf') ; do
+            eval export "$(echo $ENV | sed 's/UTF-8/iso885915/ ; s/utf8/iso885915/')"
+        done
+    fi
+}
+
+# make sure it is not assigned yet
+[[ -n ${aliases[iso2utf]} ]] && unalias iso2utf
+iso2utf() {
+    if ! isutfenv ; then
+        for ENV in $(env | command grep -i '\.iso') ; do
+            eval export "$(echo $ENV | sed 's/iso.*/UTF-8/ ; s/ISO.*/UTF-8/')"
+        done
+    fi
+}
+
+# especially for roadwarriors using GNU screen and ssh:
+if ! check_com asc &>/dev/null ; then
+  asc() { autossh -t "$@" 'screen -RdU' }
+  compdef asc=ssh
+fi
+
+# debian stuff
+if [[ -r /etc/debian_version ]] ; then
+    #a3# Execute \kbd{apt-cache search}
+    alias acs='apt-cache search'
+    #a3# Execute \kbd{apt-cache show}
+    alias acsh='apt-cache show'
+    #a3# Execute \kbd{apt-cache policy}
+    alias acp='apt-cache policy'
+    #a3# Execute \kbd{apt-get dist-upgrade}
+    salias adg="apt-get dist-upgrade"
+    #a3# Execute \kbd{apt-get install}
+    salias agi="apt-get install"
+    #a3# Execute \kbd{aptitude install}
+    salias ati="aptitude install"
+    #a3# Execute \kbd{apt-get update}
+    salias au="apt-get update"
+    #a3# Execute \kbd{aptitude update ; aptitude safe-upgrade}
+    salias -a up="aptitude update ; aptitude safe-upgrade"
+    #a3# Execute \kbd{dpkg-buildpackage}
+    alias dbp='dpkg-buildpackage'
+    #a3# Execute \kbd{grep-excuses}
+    alias ge='grep-excuses'
+
+    #a1# Take a look at the syslog: \kbd{\$PAGER /var/log/syslog}
+    salias llog="$PAGER /var/log/syslog"     # take a look at the syslog
+    #a1# Take a look at the syslog: \kbd{tail -f /var/log/syslog}
+    salias tlog="tail -f /var/log/syslog"    # follow the syslog
+fi
+
+# sort installed Debian-packages by size
+if check_com -c dpkg-query ; then
+    #a3# List installed Debian-packages sorted by size
+    alias debs-by-size="dpkg-query -Wf 'x \${Installed-Size} \${Package} \${Status}\n' | sed -ne '/^x  /d' -e '/^x \(.*\) install ok installed$/s//\1/p' | sort -nr"
+fi
+
 # Use hard limits, except for a smaller stack and no core dumps
 unlimit
 limit stack 8192
