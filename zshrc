@@ -388,28 +388,6 @@ function info_print () {
   esac
 }
 
-# preexec() => a function running before every command
-[[ $NOPRECMD -eq 0 ]] && preexec () {
-  [[ $NOPRECMD -gt 0 ]] && return 0
-
-  NAME="@$HOSTNAME"
-  # set screen window title if running in a screen
-  if [[ "$TERM" == screen* ]] ; then
-      local CMD="${1[(wr)^(*=*|sudo|ssh|-*)]}$NAME" # use hostname
-      ESC_print ${CMD}
-  fi
-
-  # adjust title of xterm
-  [[ ${NOTITLE} -gt 0 ]] && return 0
-
-  case $TERM in
-      (xterm*|rxvt*)
-          set_title "${(%):-"%n@%m:"}" "$1"
-          ;;
-  esac
-}
-
-
 EXITCODE="%(?..%?%1v )"
 # secondary prompt, printed when the shell needs more information to complete a
 # command.
@@ -429,6 +407,27 @@ alias ll='ls -l '${ls_options:+"${ls_options[*]} "}
 alias lh='ls -hAl '${ls_options:+"${ls_options[*]} "}
 #a1# List files, append qualifier to filenames \\&\quad(\kbd{/} for directories, \kbd{@} for symlinks ...)
 alias l='ls -lF '${ls_options:+"${ls_options[*]} "}
+=======
+# do we have GNU ls with color-support?
+if [[ "$TERM" != dumb ]]; then
+    #a1# execute \kbd{@a@}:\quad ls with colors
+    alias ls='ls -b -CF '${ls_options:+"${ls_options[*]} "}
+    #a1# execute \kbd{@a@}:\quad list all files, with colors
+    alias la='ls -la '${ls_options:+"${ls_options[*]} "}
+    #a1# long colored list, without dotfiles (@a@)
+    alias ll='ls -l '${ls_options:+"${ls_options[*]} "}
+    #a1# long colored list, human readable sizes (@a@)
+    alias lh='ls -hAl '${ls_options:+"${ls_options[*]} "}
+    #a1# List files, append qualifier to filenames \\&\quad(\kbd{/} for directories, \kbd{@} for symlinks ...)
+    alias l='ls -lF '${ls_options:+"${ls_options[*]} "}
+else
+    alias ls='ls -b -CF'
+    alias la='ls -la'
+    alias ll='ls -l'
+    alias lh='ls -hAl'
+    alias l='ls -lF'
+fi
+>>>>>>> Some cleanup in zshrc
 
 alias ...='cd ../../'
 
