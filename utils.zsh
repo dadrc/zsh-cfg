@@ -7,8 +7,6 @@ allcolors() {
 
 dudir() { du -scm *(ND) | sort -n }
 
-vimhelp() { vim -c "h $1 | only" }
-
 whois() { command whois "$@" | grep -v "Terms of Use" }
 
 randline() {
