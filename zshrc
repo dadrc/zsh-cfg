@@ -1,60 +1,30 @@
 # initialize zplug
-[[ -r ${HOME}/.zplug/init.zsh ]] && source ${HOME}/.zplug/init.zsh
-# install plugins
-zplug "zsh-users/zsh-syntax-highlighting", defer:2
-#zplug "junegunn/fzf-bin", from:gh-r, as:command, rename-to:fzf
-# source plugins
-zplug load
+if [[ -z "$tmpdir" ]]; then
+  [[ -r ${HOME}/.zplug/init.zsh ]] && source ${HOME}/.zplug/init.zsh
+  # install plugins
+  zplug 'zplug/zplug', hook-build:'zplug --self-manage'
+  zplug "zsh-users/zsh-syntax-highlighting", defer:2
+  #zplug "junegunn/fzf-bin", from:gh-r, as:command, rename-to:fzf
+  # source plugins
+  zplug load
+fi
 
-# append history list to the history file; this is the default but we make sure
-# because it's required for share_history.
 setopt append_history
-# import new commands from the history file also in other zsh-session
 setopt share_history
-# save each command's beginning timestamp and the duration to the history file
 setopt extended_history
-# If a new command line being added to the history list duplicates an older
-# one, the older command is removed from the list
 setopt histignorealldups
-# remove command lines from the history list when the first character on the
-# line is a space
 setopt histignorespace
-
-# if a command is issued that can't be executed as a normal command, and the
-# command is the name of a directory, perform the cd command to that directory.
 setopt auto_cd
-
-# in order to use #, ~ and ^ for filename generation grep word
-# *~(*.gz|*.bz|*.bz2|*.zip|*.Z) -> searches for word not in compressed files
-# don't forget to quote '^', '~' and '#'!
 setopt extended_glob
-
-# display PID when suspending processes as well
 setopt longlistjobs
-# report the status of backgrounds jobs immediately
 setopt notify
-
-# whenever a command completion is attempted, make sure the entire command path
-# is hashed first.
 setopt hash_list_all
-
-# not just at the end
 setopt completeinword
-
-# make cd push the old directory onto the directory stack.
 setopt auto_pushd
-# don't push the same dir twice.
 setopt pushd_ignore_dups
-
-# avoid "beep"ing
 setopt nobeep
-# * shouldn't match dotfiles. ever.
 setopt noglobdots
-
-# use zsh style word splitting
 setopt noshwordsplit
-
-# don't error out when unset parameters are used
 setopt unset
 
 typeset -ga ls_options
@@ -65,7 +35,7 @@ grep_options=( --color=auto )
 # locale setup
 [[ -r /etc/default/locale ]] && source "/etc/default/locale"
 for var in LANG LC_ALL LC_MESSAGES ; do
-    [[ -n ${(P)var} ]] && export $var
+  [[ -n ${(P)var} ]] && export $var
 done
 
 # set some variables
@@ -75,7 +45,7 @@ export MAIL=${MAIL:-/var/mail/$USER}
 export SHELL='/bin/zsh'
 
 # color setup for ls:
-which dircolors && eval $(dircolors -b)
+eval $(dircolors -b)
 
 # support colors in less
 export LESS_TERMCAP_mb=$'\E[01;31m'
@@ -127,8 +97,6 @@ bindkey '^[[4~' end-of-somewhere        # end
 # if terminal type is set to 'rxvt':
 bindkey '\e[7~' beginning-of-somewhere  # home
 bindkey '\e[8~' end-of-somewhere        # end
-#fi
-
 
 ## use Ctrl-left-arrow and Ctrl-right-arrow for jumping to word-beginnings on the CL
 bindkey "\e[5C" forward-word
@@ -167,8 +135,8 @@ fi
 
 # add a command line to the shells history without executing it
 commit-to-history() {
-    print -s ${(z)BUFFER}
-    zle send-break
+  print -s ${(z)BUFFER}
+  zle send-break
 }
 zle -N commit-to-history
 bindkey "^x^h" commit-to-history
@@ -722,7 +690,7 @@ autoload -U add-zsh-hook
 TRAPUSR1() { rehash };
 add-zsh-hook precmd apt-hook-precmd
 function apt-hook-precmd() {
-	[[ $(fc -ln -1) == *(apt|apt-get|aptitude)* ]] && killall --user $USER --signal USR1 zsh
+  [[ $(fc -ln -1) == *(apt|apt-get|aptitude)* ]] && killall --user $USER --signal USR1 zsh
 }
 
 # skip terms of use for whois
