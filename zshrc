@@ -357,6 +357,59 @@ setopt prompt_subst
 # make sure to use right prompt only when not running a command
 setopt transient_rprompt
 
+function ESC_print () {
+  info_print $'\ek' $'\e\\' "$@"
+}
+
+function set_title () {
+  info_print  $'\e]0;' $'\a' "$@"
+}
+
+function info_print () {
+  local esc_begin esc_end
+  esc_begin="$1"
+  esc_end="$2"
+  shift 2
+  printf '%s' ${esc_begin}
+  printf '%s' "$*"
+  printf '%s' "${esc_end}"
+}
+
+[[ $NOPRECMD -eq 0 ]] && precmd () {
+  [[ $NOPRECMD -gt 0 ]] && return 0
+
+  # adjust title of xterm
+  # see http://www.faqs.org/docs/Linux-mini/Xterm-Title.html
+  [[ ${NOTITLE:-} -gt 0 ]] && return 0
+  case $TERM in
+      (xterm*|rxvt*)
+          set_title ${(%):-"%n@%m: %~"}
+          ;;
+  esac
+}
+
+# preexec() => a function running before every command
+[[ $NOPRECMD -eq 0 ]] && preexec () {
+  [[ $NOPRECMD -gt 0 ]] && return 0
+
+  NAME="@$HOSTNAME"
+  # set screen window title if running in a screen
+  if [[ "$TERM" == screen* ]] ; then
+      local CMD="${1[(wr)^(*=*|sudo|ssh|-*)]}$NAME" # use hostname
+      ESC_print ${CMD}
+  fi
+
+  # adjust title of xterm
+  [[ ${NOTITLE} -gt 0 ]] && return 0
+
+  case $TERM in
+      (xterm*|rxvt*)
+          set_title "${(%):-"%n@%m:"}" "$1"
+          ;;
+  esac
+}
+
+
 EXITCODE="%(?..%?%1v )"
 # secondary prompt, printed when the shell needs more information to complete a
 # command.
