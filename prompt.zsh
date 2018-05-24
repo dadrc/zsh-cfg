@@ -1,6 +1,7 @@
 # vim: set syntax=zsh:
 
 autoload -U add-zsh-hook
+autoload -U colors && colors
 
 setopt prompt_subst
 
