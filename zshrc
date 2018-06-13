@@ -774,6 +774,7 @@ alias doch='sudo $(fc -ln -1)'
 
 source "${HOME}/.zsh/prompt.zsh"
 source "${HOME}/.zsh/vcsinfo.zsh"
+source "${HOME}/.zsh/aliases.zsh"
 [[ -r /etc/zsh_command_not_found ]] && source /etc/zsh_command_not_found
 [[ -r ${HOME}/.fzf.zsh ]] && source ${HOME}/.fzf.zsh
 [[ -r ${HOME}/.zshrc.local ]] && source ${HOME}/.zshrc.local
