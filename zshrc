@@ -850,4 +850,3 @@ source "${HOME}/.zsh/aliases.zsh"
 [[ -r ${HOME}/.zshrc.local ]] && source ${HOME}/.zshrc.local
 
 # vim:filetype=zsh foldmethod=marker autoindent expandtab shiftwidth=4
-
