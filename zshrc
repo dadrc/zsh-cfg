@@ -407,27 +407,6 @@ alias ll='ls -l '${ls_options:+"${ls_options[*]} "}
 alias lh='ls -hAl '${ls_options:+"${ls_options[*]} "}
 #a1# List files, append qualifier to filenames \\&\quad(\kbd{/} for directories, \kbd{@} for symlinks ...)
 alias l='ls -lF '${ls_options:+"${ls_options[*]} "}
-=======
-# do we have GNU ls with color-support?
-if [[ "$TERM" != dumb ]]; then
-    #a1# execute \kbd{@a@}:\quad ls with colors
-    alias ls='ls -b -CF '${ls_options:+"${ls_options[*]} "}
-    #a1# execute \kbd{@a@}:\quad list all files, with colors
-    alias la='ls -la '${ls_options:+"${ls_options[*]} "}
-    #a1# long colored list, without dotfiles (@a@)
-    alias ll='ls -l '${ls_options:+"${ls_options[*]} "}
-    #a1# long colored list, human readable sizes (@a@)
-    alias lh='ls -hAl '${ls_options:+"${ls_options[*]} "}
-    #a1# List files, append qualifier to filenames \\&\quad(\kbd{/} for directories, \kbd{@} for symlinks ...)
-    alias l='ls -lF '${ls_options:+"${ls_options[*]} "}
-else
-    alias ls='ls -b -CF'
-    alias la='ls -la'
-    alias ll='ls -l'
-    alias lh='ls -hAl'
-    alias l='ls -lF'
-fi
->>>>>>> Some cleanup in zshrc
 
 alias ...='cd ../../'
 
@@ -464,41 +443,6 @@ iso2utf() {
 if ! check_com asc &>/dev/null ; then
   asc() { autossh -t "$@" 'screen -RdU' }
   compdef asc=ssh
-fi
-
-# debian stuff
-if [[ -r /etc/debian_version ]] ; then
-    #a3# Execute \kbd{apt-cache search}
-    alias acs='apt-cache search'
-    #a3# Execute \kbd{apt-cache show}
-    alias acsh='apt-cache show'
-    #a3# Execute \kbd{apt-cache policy}
-    alias acp='apt-cache policy'
-    #a3# Execute \kbd{apt-get dist-upgrade}
-    salias adg="apt-get dist-upgrade"
-    #a3# Execute \kbd{apt-get install}
-    salias agi="apt-get install"
-    #a3# Execute \kbd{aptitude install}
-    salias ati="aptitude install"
-    #a3# Execute \kbd{apt-get update}
-    salias au="apt-get update"
-    #a3# Execute \kbd{aptitude update ; aptitude safe-upgrade}
-    salias -a up="aptitude update ; aptitude safe-upgrade"
-    #a3# Execute \kbd{dpkg-buildpackage}
-    alias dbp='dpkg-buildpackage'
-    #a3# Execute \kbd{grep-excuses}
-    alias ge='grep-excuses'
-
-    #a1# Take a look at the syslog: \kbd{\$PAGER /var/log/syslog}
-    salias llog="$PAGER /var/log/syslog"     # take a look at the syslog
-    #a1# Take a look at the syslog: \kbd{tail -f /var/log/syslog}
-    salias tlog="tail -f /var/log/syslog"    # follow the syslog
-fi
-
-# sort installed Debian-packages by size
-if check_com -c dpkg-query ; then
-    #a3# List installed Debian-packages sorted by size
-    alias debs-by-size="dpkg-query -Wf 'x \${Installed-Size} \${Package} \${Status}\n' | sed -ne '/^x  /d' -e '/^x \(.*\) install ok installed$/s//\1/p' | sort -nr"
 fi
 
 # Use hard limits, except for a smaller stack and no core dumps
