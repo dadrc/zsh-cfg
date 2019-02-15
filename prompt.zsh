@@ -26,14 +26,18 @@ function prompt-precmd() {
 	gitinfo="${${vcs_info_msg_0_%%.}/$HOME/~}"
 }
 
-function currentdir() {
-	local directory=${PWD/$HOME/"~"}
-	local count=$(echo $directory | tr -cd "/" | wc -c)
-        if [ $count -gt 3 ]; then
-		echo "…/"$(echo $directory | cut -d "/" -f$(($count - 1))-)
-	else
-		echo $directory
-	fi
+function currentdir {
+    local -a arr
+    if [[ $PWD == $HOME* ]]; then             # if we are in a directory within our homedir.
+        arr=( ${(s:/:)${PWD/$HOME\/#/\~/}} )    # substitute our homedir with ~/, then split the result into a array
+        arr[2,-2]=(${(M)arr[2,-2]#?})           # for every element besides 1(~/) and the last, truncate the word to one letter.
+    else
+        arr=( ${(s:/:)PWD} )                    # we aren't in homedir, so just split PWD as-is
+        arr[0,-2]=('' ${(M)arr[1,-2]#?})        # truncation of every directory component except the last one, also add new zero length string
+    fi
+    echo ${${(j:/:)arr}:-/}               # assign our string to psvar[1] so we can use %1v in PS1.
+                                    # joining(j:/:) our array delimited by /, the zero length string ensures the first / is added back.
+                                    # ${...:-/} is for a corner case, when we are in /.
 }
 
 function setprompt {
