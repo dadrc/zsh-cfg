@@ -1,9 +1,11 @@
+[[ -r ${HOME}/.zshrc.pre ]] && source ${HOME}/.zshrc.pre
+
 # initialize zplug
 if [[ -z "$tmpdir" ]]; then
   [[ -r ${HOME}/.zplug/init.zsh ]] && source ${HOME}/.zplug/init.zsh
   # install plugins
-  zplug 'zplug/zplug', hook-build:'zplug --self-manage'
-  zplug "zsh-users/zsh-syntax-highlighting", defer:2
+  zplug "zplug/zplug", hook-build:'zplug --self-manage', from:github
+  zplug "zsh-users/zsh-syntax-highlighting", defer:2, from:github
   #zplug "junegunn/fzf-bin", from:gh-r, as:command, rename-to:fzf
   # source plugins
   zplug load
