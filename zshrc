@@ -1,16 +1,4 @@
 [[ -r ${HOME}/.zshrc.pre ]] && source ${HOME}/.zshrc.pre
-
-# initialize zplug
-if [[ -z "$tmpdir" ]]; then
-  [[ -r ${HOME}/.zplug/init.zsh ]] && source ${HOME}/.zplug/init.zsh
-  # install plugins
-  zplug "zplug/zplug", hook-build:'zplug --self-manage', from:github
-  zplug "zsh-users/zsh-syntax-highlighting", defer:2, from:github
-  #zplug "junegunn/fzf-bin", from:gh-r, as:command, rename-to:fzf
-  # source plugins
-  zplug load
-fi
-
 setopt append_history
 setopt share_history
 setopt extended_history
@@ -794,5 +782,13 @@ source "${HOME}/.zsh/aliases.zsh"
 [[ -r /etc/zsh_command_not_found ]] && source /etc/zsh_command_not_found
 [[ -r ${HOME}/.fzf.zsh ]] && source ${HOME}/.fzf.zsh
 [[ -r ${HOME}/.zshrc.local ]] && source ${HOME}/.zshrc.local
+
+### Added by Zplugin's installer
+source "${HOME}/.zplugin/bin/zplugin.zsh"
+autoload -Uz _zplugin
+(( ${+_comps} )) && _comps[zplugin]=_zplugin
+### End of Zplugin's installer chunk
+
+zplugin light zdharma/fast-syntax-highlighting
 
 # vim:filetype=zsh foldmethod=marker autoindent expandtab shiftwidth=4
