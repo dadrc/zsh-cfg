@@ -17,6 +17,9 @@ setopt noglobdots
 setopt noshwordsplit
 setopt unset
 
+# completion system
+autoload -U compinit && compinit
+
 typeset -ga ls_options
 typeset -ga grep_options
 ls_options=( --color=auto )
@@ -768,8 +771,6 @@ function bg-color() {
   fi
 }
 
-# completion system
-autoload -U compinit && compinit
 
 export TERM='xterm-256color'
 
