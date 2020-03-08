@@ -785,11 +785,11 @@ source "${HOME}/.zsh/aliases.zsh"
 [[ -r ${HOME}/.zshrc.local ]] && source ${HOME}/.zshrc.local
 
 ### Added by Zplugin's installer
-source "${HOME}/.zplugin/bin/zplugin.zsh"
-autoload -Uz _zplugin
-(( ${+_comps} )) && _comps[zplugin]=_zplugin
+source "${HOME}/.zinit/bin/zinit.zsh"
+autoload -Uz _zinit
+(( ${+_comps} )) && _comps[zinit]=_zinit
 ### End of Zplugin's installer chunk
 
-zplugin light zdharma/fast-syntax-highlighting
+zinit light zdharma/fast-syntax-highlighting
 
 # vim:filetype=zsh foldmethod=marker autoindent expandtab shiftwidth=4

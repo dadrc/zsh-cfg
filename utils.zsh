@@ -5,9 +5,13 @@ allcolors() {
 	echo "$output"
 }
 
-dudir() { du -scm *(ND) | sort -n }
+dudir() {
+  du -scm *(ND) | sort -n
+}
 
-whois() { command whois "$@" | grep -v "Terms of Use" }
+whois() {
+  command whois "$@" | grep -v "Terms of Use"
+}
 
 randline() {
     integer z=$(wc -l <$1)
