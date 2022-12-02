@@ -85,8 +85,8 @@ zle -N end-of-somewhere beginning-or-end-of-somewhere
 bindkey '\eOH' beginning-of-somewhere  # home
 bindkey '\eOF' end-of-somewhere        # end
 # xterm,gnome-terminal,quake,etc
-bindkey '^[[1~' beginning-of-somewhere  # home
-bindkey '^[[4~' end-of-somewhere        # end
+bindkey '^[[H' beginning-of-somewhere  # home
+bindkey '^[[F' end-of-somewhere        # end
 # if terminal type is set to 'rxvt':
 bindkey '\e[7~' beginning-of-somewhere  # home
 bindkey '\e[8~' end-of-somewhere        # end
@@ -113,8 +113,8 @@ bindkey "\e[5~" history-beginning-search-backward-end # PageUp
 #k# search history forward for entry beginning with typed text
 bindkey "\e[6~" history-beginning-search-forward-end  # PageDown
 
-bindkey "$terminfo[kcuu1]"  history-beginning-search-backward-end       # cursor up
-bindkey "$terminfo[kcud1]"  history-beginning-search-forward-end # cursor down
+bindkey "^[[A"  history-beginning-search-backward-end       # cursor up
+bindkey "^[[B"  history-beginning-search-forward-end # cursor down
 
 bindkey -s '^l' "|less\n"             # ctrl-L pipes to less
 bindkey -s '^b' " &\n"                # ctrl-B runs it in the background
@@ -780,16 +780,8 @@ alias doch='sudo $(fc -ln -1)'
 source "${HOME}/.zsh/prompt.zsh"
 source "${HOME}/.zsh/vcsinfo.zsh"
 source "${HOME}/.zsh/aliases.zsh"
+source "${HOME}/.zsh/plugins.zsh"
 [[ -r /etc/zsh_command_not_found ]] && source /etc/zsh_command_not_found
-[[ -r ${HOME}/.fzf.zsh ]] && source ${HOME}/.fzf.zsh
 [[ -r ${HOME}/.zshrc.local ]] && source ${HOME}/.zshrc.local
-
-### Added by Zplugin's installer
-source "${HOME}/.zinit/bin/zinit.zsh"
-autoload -Uz _zinit
-(( ${+_comps} )) && _comps[zinit]=_zinit
-### End of Zplugin's installer chunk
-
-zinit light zdharma/fast-syntax-highlighting
 
 # vim:filetype=zsh foldmethod=marker autoindent expandtab shiftwidth=4
