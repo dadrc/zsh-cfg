@@ -403,15 +403,6 @@ alias l='ls -lF '${ls_options:+"${ls_options[*]} "}
 
 alias ...='cd ../../'
 
-# generate alias named "$KERNELVERSION-reboot" so you can use boot with kexec:
-if [[ -x /sbin/kexec ]] && [[ -r /proc/cmdline ]] ; then
-    alias "$(uname -r)-reboot"="kexec -l --initrd=/boot/initrd.img-"$(uname -r)" --command-line=\"$(cat /proc/cmdline)\" /boot/vmlinuz-"$(uname -r)""
-fi
-
-# see http://www.cl.cam.ac.uk/~mgk25/unicode.html#term for details
-alias term2iso="echo 'Setting terminal to iso mode' ; print -n '\e%@'"
-alias term2utf="echo 'Setting terminal to utf-8 mode'; print -n '\e%G'"
-
 # make sure it is not assigned yet
 [[ -n ${aliases[utf2iso]} ]] && unalias utf2iso
 utf2iso() {
@@ -773,9 +764,6 @@ function bg-color() {
 
 
 export TERM='xterm-256color'
-
-alias latest='echo *(om[1])'
-alias doch='sudo $(fc -ln -1)'
 
 source "${HOME}/.zsh/prompt.zsh"
 source "${HOME}/.zsh/vcsinfo.zsh"

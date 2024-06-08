@@ -18,6 +18,7 @@ alias ip='ip --color'
 alias ipb='ip --color --brief'
 alias apdate='sudo apt update'
 alias apgrade='sudo apt full-upgrade'
+alias l1='ls -1'
 
 function try() {
     until ssh "$@"; do
