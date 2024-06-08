@@ -3,12 +3,8 @@ github_plugins=(
   zsh-users/zsh-autosuggestions
   zsh-users/zsh-completions
   #zsh-users/zsh-history-substring-search
-  #rupa/z
-  # theme
-  #miekg/lean
   # must be last
   zsh-users/zsh-syntax-highlighting
-  #zdharma-continuum/fast-syntax-highlighting
 )
 
 for plugin in $github_plugins; do
