@@ -1,3 +1,6 @@
 [submodule "plugins/syntax"]
 	path = plugins/syntax
 	url = git://github.com/zsh-users/zsh-syntax-highlighting.git
+[submodule "F-Sy-H"]
+	path = F-Sy-H
+	url = https://github.com/z-shell/F-Sy-H.git

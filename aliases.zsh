@@ -7,18 +7,15 @@ alias doch='sudo $(fc -ln -1)'
 alias gpuload='nvidia-settings -q ":0/GPUUtilization[gpu:0]" | grep -oP "graphics=\d+" | cut -d= -f2'
 alias gputemp='nvidia-settings -q gpucoretemp | grep -oP ": \d+" | cut -d" " -f2'
 alias django='python3 manage.py'
-alias ip='ip --color'
-alias ipb='ip --color --brief'
 alias view='vim -R'
 alias startvm='VBoxManage startvm --type headless'
 alias prime="perl -wle 'print \"prime\" if (1 x shift) !~ /^1?$|^(11+?)\1+$/'"
 alias tailf='tail -f'
 alias dd='dd status=progress'
-alias ip='ip --color'
-alias ipb='ip --color --brief'
 alias apdate='sudo apt update'
 alias apgrade='sudo apt full-upgrade'
 alias l1='ls -1'
+alias ip='ip -color'
 
 function try() {
     until ssh "$@"; do
@@ -26,6 +23,12 @@ function try() {
     done
 }
 compdef try='ssh'
+
+function mkcd() {
+    mkdir --verbose --parents "$@"
+    cd "$@"
+}
+compdef mkcd='mkdir'
 
 function rsplit() {
     if [[ -z "$1" ]] || [[ -z "$2" ]] || [[ -z "$3" ]] || [[ -z "$4" ]]; then
@@ -40,4 +43,9 @@ function today() {
         echo "# $(date +%Y-%m-%d)\n\n* " > $filename
     fi
     vim '+normal G$' $filename
+}
+
+function changelog() {
+    tag=$(echo "$1" | sed 's/~/_/' | sed 's/:/%/')
+    gbp dch --auto --release --distribution focal --ignore-branch --commit --no-multimaint --new-version "$1" && git tag "$tag" && echo "Commit tagged with <$tag>"
 }
