@@ -623,7 +623,7 @@ simple-extract() {
                 USES_STDOUT=false
                 ;;
             *.7z)
-                DECOMP_CMD="7z x"
+                DECOMP_CMD="p7zip --decompress"
                 USES_STDIN=false
                 USES_STDOUT=false
                 ;;
