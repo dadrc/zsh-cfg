@@ -113,8 +113,8 @@ bindkey "\e[5~" history-beginning-search-backward-end # PageUp
 #k# search history forward for entry beginning with typed text
 bindkey "\e[6~" history-beginning-search-forward-end  # PageDown
 
-bindkey "^[[A"  history-beginning-search-backward-end       # cursor up
-bindkey "^[[B"  history-beginning-search-forward-end # cursor down
+bindkey "$terminfo[kcuu1]" history-beginning-search-backward-end # cursor up
+bindkey "$terminfo[kcud1]" history-beginning-search-forward-end  # cursor down
 
 bindkey -s '^l' "|less\n"             # ctrl-L pipes to less
 bindkey -s '^b' " &\n"                # ctrl-B runs it in the background
