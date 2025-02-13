@@ -49,3 +49,13 @@ function changelog() {
     tag=$(echo "$1" | sed 's/~/_/' | sed 's/:/%/')
     gbp dch --auto --release --distribution focal --ignore-branch --commit --no-multimaint --new-version "$1" && git tag "$tag" && echo "Commit tagged with <$tag>"
 }
+
+function list-changes() {
+    if [[ -z "$1" ]] || [[ -z "$2" ]]; then
+        echo "Usage: $0 <branch A> <branch B>"
+        echo "Lists all changes in branch A that are not in branch B"
+        return
+    fi
+    comm -2 -3 <(git log --no-merges --pretty='%s' "$1" | sort) <(git log --no-merges --pretty='%s' "$2" | sort)
+}
+

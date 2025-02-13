@@ -100,6 +100,8 @@ bindkey "\e[1;5D" backward-word
 bindkey '^[[1;3C' forward-word
 bindkey '^[[1;3D' backward-word
 
+# Fix history stepping, see https://github.com/zsh-users/zsh-autosuggestions/issues/619
+ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(history-beginning-search-backward-end history-beginning-search-forward-end)
 # Search backward in the history for a line beginning with the current
 # line up to the cursor and move the cursor to the end of the line then
 zle -N history-beginning-search-backward-end history-search-end
