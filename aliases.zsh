@@ -16,6 +16,7 @@ alias apdate='sudo apt update'
 alias apgrade='sudo apt full-upgrade'
 alias l1='ls -1'
 alias ip='ip -color'
+alias convert='magick convert'
 
 function try() {
     until ssh "$@"; do

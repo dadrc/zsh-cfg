@@ -18,7 +18,11 @@ setopt noshwordsplit
 setopt unset
 
 # completion system
-autoload -U compinit && compinit
+autoload -Uz compinit
+for dump in ~/.zcompdump(N.mh+24); do
+  compinit
+done
+compinit -C
 
 typeset -ga ls_options
 typeset -ga grep_options
@@ -32,7 +36,7 @@ for var in LANG LC_ALL LC_MESSAGES ; do
 done
 
 # set some variables
-export EDITOR=${EDITOR:-vim}
+export EDITOR=vim
 export PAGER=${PAGER:-less}
 export MAIL=${MAIL:-/var/mail/$USER}
 export SHELL='/bin/zsh'
@@ -115,8 +119,10 @@ bindkey "\e[5~" history-beginning-search-backward-end # PageUp
 #k# search history forward for entry beginning with typed text
 bindkey "\e[6~" history-beginning-search-forward-end  # PageDown
 
-bindkey "$terminfo[kcuu1]" history-beginning-search-backward-end # cursor up
-bindkey "$terminfo[kcud1]" history-beginning-search-forward-end  # cursor down
+#bindkey "${terminfo[kcuu1]}" history-beginning-search-backward-end # cursor up
+bindkey "^[[A" history-beginning-search-backward-end # cursor up
+#bindkey "${terminfo[kcud1]}" history-beginning-search-forward-end  # cursor down
+bindkey "^[[B" history-beginning-search-forward-end  # cursor down
 
 bindkey -s '^l' "|less\n"             # ctrl-L pipes to less
 bindkey -s '^b' " &\n"                # ctrl-B runs it in the background
